@@ -14,6 +14,7 @@
       },
       "imitateOn": "Repeatedly press the on button on your remote until a checkmark appears",
       "imitateOff": "Repeatedly press the off button on your remote until a checkmark appears",
+      "error": "It appears that something went wrong, please try again",
   		"imitate2":{
   			"testIfWorking": "Use your remote or the switch above to test your device"
   		}

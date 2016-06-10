@@ -87,20 +87,31 @@ function createDriver(driver) {
 		},
 		
 		pair: function( socket ) {
-			socket.on('imitateOn', function ( data, callback ){
+			onCounter = 0;
+			offCounter = 0;
+			socket.on('imitateOn', function imitateOn( data, callback ){
 				if(data.counter == 0) tempdata.on = [0,0,0,0];
 				myEvent.once('newMessage', function(payload){
-					if(tempdata.on.indexOf(payload) >= 0) return;
-					tempdata.on[data.counter] = payload;
-					socket.emit('remote_found_on'); //Send signal to frontend
+					if(tempdata.on.indexOf(payload) >= 0){
+						if(onCounter >= 6) socket.emit('error');
+						onCounter++;
+						imitateOn(data, callback);
+					}else{
+						tempdata.on[data.counter] = payload;
+						socket.emit('remote_found_on'); //Send signal to frontend
+					}
 				});
 				callback();
 			});
 
-			socket.on('imitateOff', function ( data, callback ){
+			socket.on('imitateOff', function imitateOff( data, callback ){
 				if(data.counter == 0) tempdata.off = [0,0,0,0];
 				myEvent.once('newMessage', function(payload){
-					if(tempdata.off.indexOf(payload) >= 0) return;
+					if(tempdata.off.indexOf(payload) >= 0){
+						if(offCounter >= 6) socket.emit('error');
+						offCounter++; 
+						imitateOff(data, callback);
+					}
 					tempdata.off[data.counter] = payload;
 					socket.emit('remote_found_off'); //Send signal to frontend
 				});
